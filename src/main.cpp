@@ -3,17 +3,26 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
+#define BLYNK_TEMPLATE_ID "TMPL5a5btpb2r"
+#define BLYNK_TEMPLATE_NAME "TP02"
+#define BLYNK_AUTH_TOKEN "TeilLIxLLgGKgVruVpddyOi5uKRsQ2YY"
+
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+
+#define BLYNK_PRINT Serial
+
 // Define the pins that we will use
-#define SENSOR 33
+#define SENSOR 14
 #define LED 26
 #define DHTTYPE DHT11
 
 DHT_Unified dht(SENSOR, DHTTYPE);
 
-// WiFi credentials go here
-// ...
-// ...
-// ...
+// Avant le setup
+char ssid[] = "HelloWorld";
+char pass[] = "testtest";
 
 void setup() {
   // Setup pins
@@ -24,10 +33,9 @@ void setup() {
   Serial.begin(9600);
   delay(100);
 
-  // begin the Blynk session
-  // ...
-  // ...
-  // ...
+  // Au début du setup, après la connexion série
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  Blynk.run();
 
   // Start listening to the DHT11
   dht.begin();
@@ -59,10 +67,9 @@ void setup() {
   }
 
   // Send data to Blynk
-  // ...
-  // ...
-  // ...
 
+  Blynk.virtualWrite(V1, relative_humidity_measure);
+  Blynk.virtualWrite(V0, temp_measure);
   Serial.println("Going to sleep for 5 seconds...");
   delay(100);
   ESP.deepSleep(5e6);
